@@ -28,6 +28,8 @@ import javax.swing.event.*;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 
+import com.cjm.magic_realm.components.storyline.StoryManager;
+import com.cjm.magic_realm.components.storyline.TestMoveStory;
 import com.robin.game.objects.*;
 import com.robin.game.server.GameClient;
 import com.robin.game.server.GameHost;
@@ -1641,6 +1643,10 @@ public class RealmGameHandler extends RealmSpeakInternalFrame {
 					// Done
 					broadcast(character.getGameObject().getName(), "Joins the game.");
 					broadcastSummaryMessage(character.getGameObject().getName() + " joins the game.");
+					
+					//CJM -- add bogus story to see if we can get it working with the game UI
+					StoryManager.getInstance().addCharacter(character.getName());
+					StoryManager.getInstance().addStory(character.getName(), "testmove", new TestMoveStory());
 				}
 			}
 		}
@@ -1648,6 +1654,8 @@ public class RealmGameHandler extends RealmSpeakInternalFrame {
 		logger.fine("Releasing character pool lock...");
 		submitChanges();
 		logger.fine("Done");
+		
+
 	}
 
 	protected void fetchExtendedDevelopmentBonuses(CharacterWrapper character) {

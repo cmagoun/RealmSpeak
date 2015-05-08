@@ -27,6 +27,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 
+import com.cjm.magic_realm.components.storyline.StoryManager;
 import com.robin.game.objects.GameObject;
 import com.robin.general.swing.*;
 import com.robin.general.util.RandomNumber;
@@ -745,10 +746,13 @@ public class RealmTurnPanel extends CharacterFramePanel {
 		//CJM -- Just marking where the current code tests quest requirements
 		QuestRequirementParams params = new QuestRequirementParams();
 		params.timeOfCall = GamePhaseType.EndOfPhase;
-
+		
 		if (getCharacter().testQuestRequirements(getMainFrame(),params)) {
 			getCharacterFrame().updateCharacter();
 		}
+		
+		//CJM -- This is where I am hooking the story manager for phase events
+		StoryManager.getInstance().handleStoryEvent(DayAction.getDayAction(ar.getActionId()).getName(), getCharacter(), null); //not sure what to do with payload atm
 		
 		getGameHandler().submitChanges(); // Will this work okay?
 		

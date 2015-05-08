@@ -37,6 +37,14 @@ public class RealmLoader {
 		data.loadFromPath(DATA_PATH);
 	}
 	
+	public RealmLoader(String dataPath){
+		master = new GameData();
+		master.loadFromPath(dataPath);
+
+		data = new GameData();
+		data.loadFromPath(dataPath);
+	}
+	
 	public void cleanupData(String keyVals) {
 		long maxid = master.getMaxId();
 		GamePool pool = new GamePool(data.getGameObjects());

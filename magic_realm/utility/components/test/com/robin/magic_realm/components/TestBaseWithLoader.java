@@ -50,7 +50,7 @@ public abstract class TestBaseWithLoader {
 	 */
 	@Before
 	public void setUp() {
-		loader = new RealmLoader();
+		loader = new RealmLoader("magic_realm/utility/components/resources/data/MagicRealmData.xml");
 		ArrayList keyVals = new ArrayList();
 		keyVals.add("original_game");
 		loader.getData().doSetup("standard_game",keyVals);

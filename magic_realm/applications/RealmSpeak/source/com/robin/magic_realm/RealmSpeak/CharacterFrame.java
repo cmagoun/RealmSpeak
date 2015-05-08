@@ -111,7 +111,6 @@ public class CharacterFrame extends RealmSpeakInternalFrame implements ICharacte
 	protected CharacterQuestPanel questPanel;
 	protected RealmTurnPanel turnPanel;
 	protected GameOverPanel gameOverPanel;
-
 	/**
 	 * Sole constructor
 	 */
@@ -205,47 +204,21 @@ public class CharacterFrame extends RealmSpeakInternalFrame implements ICharacte
 			repaint();
 		}
 	}
-
+	
 	public static void updateActiveCurses(CharacterWrapper character,Box box) {
 		boolean nullified = character.isNullifiedCurses();
 		String postfix = nullified ? " (NULLIFIED)" : "";
-		Collection curses = character.getAllCurses();
-		if (curses.contains(Constants.EYEMIST)) {
-			JLabel label = new JLabel(ImageCache.getIcon("curse/eyemist"));
-			label.setEnabled(!nullified);
-			label.setToolTipText("Eyemist - Cannot SEARCH" + postfix);
-			box.add(label);
-		}
-		if (curses.contains(Constants.SQUEAK)) {
-			JLabel label = new JLabel(ImageCache.getIcon("curse/squeak"));
-			label.setEnabled(!nullified);
-			label.setToolTipText("Squeak - Cannot HIDE" + postfix);
-			box.add(label);
-		}
-		if (curses.contains(Constants.WITHER)) {
-			JLabel label = new JLabel(ImageCache.getIcon("curse/wither"));
-			label.setEnabled(!nullified);
-			label.setToolTipText("Wither - Cannot have active effort chits" + postfix);
-			box.add(label);
-		}
-		if (curses.contains(Constants.ILL_HEALTH)) {
-			JLabel label = new JLabel(ImageCache.getIcon("curse/illhealth"));
-			label.setEnabled(!nullified);
-			label.setToolTipText("Ill Health - Cannot REST" + postfix);
-			box.add(label);
-		}
-		if (curses.contains(Constants.ASHES)) {
-			JLabel label = new JLabel(ImageCache.getIcon("curse/ashes"));
-			label.setEnabled(!nullified);
-			label.setToolTipText("Ashes - GOLD is worthless" + postfix);
-			box.add(label);
-		}
-		if (curses.contains(Constants.DISGUST)) {
-			JLabel label = new JLabel(ImageCache.getIcon("curse/disgust"));
-			label.setEnabled(!nullified);
-			label.setToolTipText("Disgust - FAME is worthless" + postfix);
-			box.add(label);
-		}
+		ArrayList<String> curses = character.getAllCurses();
+		ArrayList<CurseLabel>labels = CurseLabel.getAllLabels();
+		
+		labels.stream()
+			.filter(lbl -> curses.contains(lbl.Key))
+			.forEach(lbl -> {
+				JLabel label = new JLabel(ImageCache.getIcon(lbl.IconLocation));
+				label.setEnabled(!nullified);
+				label.setToolTipText(lbl.ToolTipText + postfix);
+				box.add(label);
+			});
 	}
 	
 	public ArrayList<RealmComponent> getPossibleBlockees() {
