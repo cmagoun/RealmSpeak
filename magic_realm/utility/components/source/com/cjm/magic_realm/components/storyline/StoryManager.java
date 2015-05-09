@@ -25,10 +25,10 @@ public class StoryManager {
 		stories.put(characterName, new StoryList());
 	}
 	
-	public void addStory(String characterName, String key, Story story){
+	public void addStory(String characterName, Story story){
 		StoryList list = getStoryList(characterName);
 		if(list == null){addCharacter(characterName);}
-		list.addStory(key, story);
+		list.addStory(story);
 	}
 	
 	public Story getStory(String characterName, String key){

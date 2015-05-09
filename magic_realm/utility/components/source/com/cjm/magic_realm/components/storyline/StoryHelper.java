@@ -1,0 +1,32 @@
+package com.cjm.magic_realm.components.storyline;
+
+import com.robin.magic_realm.components.attribute.TileLocation;
+import com.robin.magic_realm.components.wrapper.CharacterWrapper;
+
+public class StoryHelper {
+	
+	public static boolean isInDwelling(CharacterWrapper character, String dwellingName){
+		TileLocation loc = character.getCurrentLocation();
+		
+		return loc.clearing.holdsDwelling() 
+			&& loc.clearing.getDwelling().toString().equalsIgnoreCase(dwellingName);
+	}
+	
+	public static boolean isInDwelling(CharacterWrapper character){
+		TileLocation loc = character.getCurrentLocation();
+		return loc.clearing.holdsDwelling();
+	}
+	
+	public static boolean isInClearing(CharacterWrapper character, String clearingName){
+		TileLocation loc = character.getCurrentLocation();
+		return loc.clearing.shortString().equalsIgnoreCase(clearingName);
+	}
+	
+	public static boolean isInTile(CharacterWrapper character, String tileName){
+		TileLocation loc = character.getCurrentLocation();
+		return loc.tile.getName().equalsIgnoreCase(tileName);
+	}
+	
+	
+	
+}

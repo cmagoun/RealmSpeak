@@ -26,17 +26,17 @@ public class StoryManagerTests extends TestBaseWithLoader {
 	public void canAddStory(){
 		StoryManager manager = StoryManager.getInstance();
 		manager.addCharacter("Amazon");
-		manager.addStory("Amazon", "test", new TestStory());
+		manager.addStory("Amazon", new TestStory());
 		
-		assertEquals(manager.getStory("Amazon", "test").getDescription(), "This is a test");
+		assertEquals(manager.getStory("Amazon", "Test Story").getDescription(), "This is a test");
 	}
 
 	@Test
 	public void whatHappensWhenWeAddTheSameStoryTwice(){
 		StoryManager manager = StoryManager.getInstance();
 		manager.addCharacter("Amazon");
-		manager.addStory("Amazon", "test", new TestStory());
-		manager.addStory("Amazon", "test", new TestStory());
+		manager.addStory("Amazon", new TestStory());
+		manager.addStory("Amazon", new TestStory());
 		
 		assertEquals(manager.getStoryList("Amazon").count(), 1);
 	}
@@ -45,12 +45,12 @@ public class StoryManagerTests extends TestBaseWithLoader {
 	public void canSwitchStates(){
 		StoryManager manager = StoryManager.getInstance();
 		manager.addCharacter("Amazon");
-		manager.addStory("Amazon", "test", new TestStory());
+		manager.addStory("Amazon", new TestStory());
 		
 		CharacterWrapper amazon = new CharacterWrapper(findGameObject("Amazon"));
 		manager.handleStoryEvent("two", amazon, null);
 		
-		TestStory result = (TestStory)manager.getStory("Amazon", "test");
+		TestStory result = (TestStory)manager.getStory("Amazon", "Test Story");
 		assertEquals(result.report(), "two");
 	}
 	
@@ -59,14 +59,14 @@ public class StoryManagerTests extends TestBaseWithLoader {
 		StoryManager manager = StoryManager.getInstance();
 		manager.addCharacter("Amazon");
 		manager.addCharacter("Black Knight");
-		manager.addStory("Amazon", "test", new TestStory());
-		manager.addStory("Black Knight", "test", new TestStory());
+		manager.addStory("Amazon", new TestStory());
+		manager.addStory("Black Knight", new TestStory());
 		
 		CharacterWrapper amazon = new CharacterWrapper(findGameObject("Amazon"));
 		manager.handleStoryEvent("two", amazon, null);
 		
-		TestStory resultAmazon = (TestStory)manager.getStory("Amazon", "test");
-		TestStory resultBK = (TestStory)manager.getStory("Black Knight", "test");
+		TestStory resultAmazon = (TestStory)manager.getStory("Amazon", "Test Story");
+		TestStory resultBK = (TestStory)manager.getStory("Black Knight", "Test Story");
 		assertEquals(resultAmazon.report(), "two"); //story should have advanced
 		assertEquals(resultBK.report(), "one"); //story should be unaffected
 	}

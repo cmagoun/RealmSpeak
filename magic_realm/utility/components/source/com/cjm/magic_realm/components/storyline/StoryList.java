@@ -14,8 +14,8 @@ public class StoryList {
 		return stories.get(key);
 	}
 	
-	public void addStory(String key, Story story){
-		stories.put(key, story);
+	public void addStory(Story story){
+		stories.put(story.getName(), story);
 	}
 	
 	public ArrayList<Story>allStories(){

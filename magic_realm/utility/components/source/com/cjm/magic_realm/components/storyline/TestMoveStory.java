@@ -1,39 +1,41 @@
 package com.cjm.magic_realm.components.storyline;
 
-import com.robin.magic_realm.components.attribute.TileLocation;
+import com.cjm.magic_realm.components.storyline.StoryStep.StepStatus;
 import com.robin.magic_realm.components.wrapper.CharacterWrapper;
 
 public class TestMoveStory extends Story {
 
-	private enum States{None, Start, ArrivedAtDestination, ReturnedHome};
+	private String GO_TO = "Move to Ruins 3";
+	private String RETURN_TO_INN = "Return to Inn";
+	
+	public enum States{None, Started, ArrivedAtDestination, ReturnedHome};
 	private States state = States.None;
 	
 
-	public TestMoveStory() {
-		super("Move Event Test");
+	public TestMoveStory(){
+		steps.add(new StoryStep(GO_TO));
+		steps.add(new StoryStep(RETURN_TO_INN));
 	}
-
+	
 	@Override
 	public void handleStoryEvent(String eventKey, CharacterWrapper character, Object payload) {
 		switch(state){
 		
 		case ArrivedAtDestination:
-			if(eventKey == "Move"){
-				TileLocation loc = character.getCurrentLocation();
-				if(loc.clearing.holdsDwelling() && loc.clearing.getDwelling().getGameObject().getName().equals("Inn")){
-					state = States.ReturnedHome;
-				}
+			if(eventKey.equalsIgnoreCase("move") && StoryHelper.isInDwelling(character, "inn")){
+				state = States.ReturnedHome;
+				completeSteps();
 			}
 			
 		case ReturnedHome:
 			break;
 			
-		case Start:
-			if(eventKey == "Move"){
-				TileLocation loc = character.getCurrentLocation();
-				if(loc.clearing.shortString().equals("Ruins 3")){
-					state = States.ArrivedAtDestination;
-				}
+		case Started:
+			if(eventKey.equalsIgnoreCase("move")  && StoryHelper.isInClearing(character, "ruins 3")){
+				state = States.ArrivedAtDestination;
+				changeStepStatus(GO_TO, StepStatus.Complete);
+				changeStepStatus(RETURN_TO_INN, StepStatus.Current);
+				
 			}
 		default:
 			break;
@@ -43,25 +45,33 @@ public class TestMoveStory extends Story {
 
 	@Override
 	public String getDescription() {
-		// TODO Auto-generated method stub
-		return "This is a test to see if we can handle movement events";
+		return "This is a test to see if we can handle movement events. Head to Ruins 3, then return to the Inn.";
 	}
 
 	@Override
 	public void start(CharacterWrapper character) {
-		// TODO Auto-generated method stub
-		state = States.Start;
+		state = States.Started;
+		changeStepStatus(GO_TO, StepStatus.Current);
 	}
 
 	@Override
 	public void end(CharacterWrapper character) {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public boolean canStart(CharacterWrapper character) {
-		return character.getCurrentLocation().clearing.holdsDwelling();
+		return StoryHelper.isInDwelling(character);
+	}
+
+	@Override
+	public boolean isStarted() {
+		return state != States.None;
+	}
+
+	@Override
+	public String getName() {
+		return "Test Move Story";
 	}
 
 }

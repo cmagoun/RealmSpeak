@@ -28,6 +28,7 @@ import javax.swing.event.*;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 
+import com.cjm.magic_realm.components.storyline.Story;
 import com.cjm.magic_realm.components.storyline.StoryManager;
 import com.cjm.magic_realm.components.storyline.TestMoveStory;
 import com.robin.game.objects.*;
@@ -1645,8 +1646,10 @@ public class RealmGameHandler extends RealmSpeakInternalFrame {
 					broadcastSummaryMessage(character.getGameObject().getName() + " joins the game.");
 					
 					//CJM -- add bogus story to see if we can get it working with the game UI
+					Story story = new TestMoveStory();
 					StoryManager.getInstance().addCharacter(character.getName());
-					StoryManager.getInstance().addStory(character.getName(), "testmove", new TestMoveStory());
+					StoryManager.getInstance().addStory(character.getName(), story);
+					story.start(character);
 				}
 			}
 		}

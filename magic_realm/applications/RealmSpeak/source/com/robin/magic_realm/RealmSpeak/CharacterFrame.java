@@ -111,6 +111,10 @@ public class CharacterFrame extends RealmSpeakInternalFrame implements ICharacte
 	protected CharacterQuestPanel questPanel;
 	protected RealmTurnPanel turnPanel;
 	protected GameOverPanel gameOverPanel;
+	
+	//CJM -- story tests
+	protected CharacterStoryPanel storyPanel;
+	
 	/**
 	 * Sole constructor
 	 */
@@ -367,6 +371,11 @@ public class CharacterFrame extends RealmSpeakInternalFrame implements ICharacte
 		// Quests
 		if (questPanel != null) {
 			questPanel.updatePanel();
+		}
+		
+		//CJM Story Panel
+		if(storyPanel != null){
+			storyPanel.updatePanel();
 		}
 
 		updateCharLabel();
@@ -746,6 +755,9 @@ public class CharacterFrame extends RealmSpeakInternalFrame implements ICharacte
 			tabs.addTab(null, ImageCache.getIcon("tab/quest"), getQuestPanel(),"Quest");
 		}
 		tabs.addTab(null, ImageCache.getIcon("tab/chat"), getChatPanel(),"Chat");
+		
+		//CJM test story
+		tabs.addTab(null,  ImageCache.getIcon("tab/quest"), getStoryPanel(), "Story");
 
 		layoutPanel.add(tabs, "Center");
 
@@ -1865,6 +1877,14 @@ public class CharacterFrame extends RealmSpeakInternalFrame implements ICharacte
 			questPanel = new CharacterQuestPanel(this);
 		}
 		return questPanel;
+	}
+	
+	//CJM test story
+	private CharacterStoryPanel getStoryPanel() {
+		if (storyPanel == null) {
+			storyPanel = new CharacterStoryPanel(this);
+		}
+		return storyPanel;
 	}
 	
 	private CharacterNotesPanel getNotesPanel() {
