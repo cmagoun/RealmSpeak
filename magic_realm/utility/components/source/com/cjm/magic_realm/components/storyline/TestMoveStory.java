@@ -1,6 +1,11 @@
 package com.cjm.magic_realm.components.storyline;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+
 import com.cjm.magic_realm.components.storyline.StoryStep.StepStatus;
+import com.robin.magic_realm.RealmSpeak.StoryOptionsFrame;
 import com.robin.magic_realm.components.wrapper.CharacterWrapper;
 
 public class TestMoveStory extends Story {
@@ -52,6 +57,8 @@ public class TestMoveStory extends Story {
 	public void start(CharacterWrapper character) {
 		state = States.Started;
 		setCurrent(GO_TO);
+		
+		showIntro();
 	}
 
 	@Override
@@ -77,6 +84,33 @@ public class TestMoveStory extends Story {
 	@Override
 	public String getStartInstructions() {
 		return "You may start this quest in any dwelling";
+	}
+	
+	private void showIntro(){
+		StoryOptionsFrame frame = new StoryOptionsFrame();
+
+		frame.setTitle("This is a Test!");
+		frame.setText("You are sitting quietly in the Inn when suddenly, someone comes to you and tells you to get your butt to Ruins 3. Like NOW!!!");
+		
+		StoryOption ok = new StoryOption("OK", new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent evt) {
+				frame.setVisible(false);
+			}
+		});
+		
+		StoryOption cancel = new StoryOption("On second thought...", new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent evt){
+				state = States.None;
+				resetSteps();
+				frame.setVisible(false);
+			}
+		});
+		
+		frame.addOptions(ok);
+		frame.addOptions(cancel);
+		frame.setVisible(true);	
 	}
 
 }

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 import com.cjm.magic_realm.components.storyline.StoryStep.StepStatus;
+import com.robin.magic_realm.RealmSpeak.CharacterStoryPanel;
 import com.robin.magic_realm.components.wrapper.CharacterWrapper;
 
 public abstract class Story {
@@ -15,6 +16,8 @@ public abstract class Story {
 	public abstract String getDescription();
 	public abstract String getStartInstructions();
 	public abstract String getName();
+
+	protected CharacterStoryPanel panel;
 	
 	protected ArrayList<StoryStep>steps;
 	
@@ -33,6 +36,7 @@ public abstract class Story {
 		
 		//CJM -- for now I want this to throw if we don't find anything
 		step.get().Status = status;
+		if(panel != null){panel.updatePanel();}
 	}
 	
 	public void setComplete(String key){
@@ -49,11 +53,15 @@ public abstract class Story {
 	
 	public void resetSteps(){
 		steps.stream()
-			.forEach(s -> s.Status = StepStatus.Pending);
+			.forEach(s -> changeStepStatus(s.Key, StepStatus.Pending));
 	}
 	
 	public void completeSteps(){
 		steps.stream()
-			.forEach(s -> s.Status = StepStatus.Complete);
+			.forEach(s ->changeStepStatus(s.Key, StepStatus.Complete));
+	}
+	
+	public void setPanel(CharacterStoryPanel p){
+		panel = p;
 	}
 }

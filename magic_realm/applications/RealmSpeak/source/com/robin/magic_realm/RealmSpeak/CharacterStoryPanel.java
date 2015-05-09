@@ -38,54 +38,59 @@ public class CharacterStoryPanel extends CharacterFramePanel {
 	JButton startButton;
 	JButton abandonButton;
 	int lastIndex;
+	CharacterStoryPanel thePanel;
 	
 	ListSelectionListener questSelected = new ListSelectionListener(){
 		public void valueChanged(ListSelectionEvent evt){
-			setDescriptionLabelText();
+			Story story = getSelectedStory();
+			if(story != null){story.setPanel(thePanel);}
+			setDescriptionLabelText(story);
 		}
 	};
 	
 	ActionListener startPressed = new ActionListener(){
 		public void actionPerformed(ActionEvent evt){
-			int index = storyList.getSelectedIndex();
-			if(index == -1){return;}
+			Story story = getSelectedStory();
+			if(story == null){return;}
 			
-			String storyName = storyList.getModel().getElementAt(index);
-			Story story = getStoryWithName(storyName);
 			story.start(getCharacter());
+			story.setPanel(thePanel);
 			
-			lastIndex = index;
+			lastIndex = storyList.getSelectedIndex();
 			updatePanel();
 		}
 	};
 	
 	ActionListener abandonPressed = new ActionListener(){
 		public void actionPerformed(ActionEvent evt){
-			int index = storyList.getSelectedIndex();
-			if(index == -1){return;}
+			Story story = getSelectedStory();
+			if(story == null){return;}
 			
-			String storyName = storyList.getModel().getElementAt(index);
-			StoryManager.getInstance().removeStory(getCharacter().getName(), storyName);
-			
+			StoryManager.getInstance().removeStory(getCharacter().getName(), story.getName());	
 			updatePanel();
 		}
 	};
 
 	protected CharacterStoryPanel(CharacterFrame parent) {
 		super(parent);
+		thePanel = this;
 		initComponents();
 	}
 	
-	private void setDescriptionLabelText(){
+	private Story getSelectedStory(){
 		int index = storyList.getSelectedIndex();
-		if(index == -1){
-			descriptionLabel.setText("");
-			return;
-		}
+		if(index == -1) {return null;}
 		
 		String storyName = storyList.getModel().getElementAt(index);
-		Story story = getStoryWithName(storyName);	
-		descriptionLabel.setText(getDescriptionLabelHtml(story));
+		return getStoryWithName(storyName);	
+	}
+	
+	private void setDescriptionLabelText(Story story){
+		if(story != null){
+			descriptionLabel.setText(getDescriptionLabelHtml(story));
+		} else	{
+			descriptionLabel.setText("");
+		}		
 	}
 	
 	private String getDescriptionLabelHtml(Story story){
@@ -198,7 +203,7 @@ public class CharacterStoryPanel extends CharacterFramePanel {
 		storyList.setModel(storyModel);
 		
 		storyList.setSelectedIndex(lastIndex);
-		setDescriptionLabelText();
+		setDescriptionLabelText(getSelectedStory());
 	}
 
 	private ArrayList<Story>getStories(){
