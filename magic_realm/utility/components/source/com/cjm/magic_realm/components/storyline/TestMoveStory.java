@@ -22,7 +22,7 @@ public class TestMoveStory extends Story {
 		switch(state){
 		
 		case ArrivedAtDestination:
-			if(eventKey.equalsIgnoreCase("move") && StoryHelper.isInDwelling(character, "inn")){
+			if(eventKey.equalsIgnoreCase("move") && StoryRequirements.isInDwelling(character, "inn")){
 				state = States.ReturnedHome;
 				completeSteps();
 			}
@@ -31,10 +31,10 @@ public class TestMoveStory extends Story {
 			break;
 			
 		case Started:
-			if(eventKey.equalsIgnoreCase("move")  && StoryHelper.isInClearing(character, "ruins 3")){
+			if(eventKey.equalsIgnoreCase("move")  && StoryRequirements.isInClearing(character, "ruins 3")){
 				state = States.ArrivedAtDestination;
-				changeStepStatus(GO_TO, StepStatus.Complete);
-				changeStepStatus(RETURN_TO_INN, StepStatus.Current);
+				setComplete(GO_TO);
+				setCurrent(RETURN_TO_INN);
 				
 			}
 		default:
@@ -51,7 +51,7 @@ public class TestMoveStory extends Story {
 	@Override
 	public void start(CharacterWrapper character) {
 		state = States.Started;
-		changeStepStatus(GO_TO, StepStatus.Current);
+		setCurrent(GO_TO);
 	}
 
 	@Override
@@ -61,7 +61,7 @@ public class TestMoveStory extends Story {
 
 	@Override
 	public boolean canStart(CharacterWrapper character) {
-		return StoryHelper.isInDwelling(character);
+		return StoryRequirements.isInDwelling(character);
 	}
 
 	@Override
@@ -72,6 +72,11 @@ public class TestMoveStory extends Story {
 	@Override
 	public String getName() {
 		return "Test Move Story";
+	}
+
+	@Override
+	public String getStartInstructions() {
+		return "You may start this quest in any dwelling";
 	}
 
 }

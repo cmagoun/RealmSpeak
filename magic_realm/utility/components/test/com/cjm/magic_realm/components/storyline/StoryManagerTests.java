@@ -30,6 +30,18 @@ public class StoryManagerTests extends TestBaseWithLoader {
 		
 		assertEquals(manager.getStory("Amazon", "Test Story").getDescription(), "This is a test");
 	}
+	
+	@Test
+	public void canRemoveStory(){
+		StoryManager manager = StoryManager.getInstance();
+		manager.addCharacter("Amazon");
+		manager.addStory("Amazon", new TestStory());
+		manager.addStory("Amazon", new TestMoveStory());
+		assertEquals(2, manager.getStoryList("Amazon").count());
+	
+		manager.removeStory("Amazon", "Test Story");
+		assertEquals(1, manager.getStoryList("Amazon").count());
+	}
 
 	@Test
 	public void whatHappensWhenWeAddTheSameStoryTwice(){

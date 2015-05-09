@@ -13,6 +13,7 @@ public abstract class Story {
 	public abstract void end(CharacterWrapper character);
 	public abstract void handleStoryEvent(String eventKey, CharacterWrapper character, Object payload);
 	public abstract String getDescription();
+	public abstract String getStartInstructions();
 	public abstract String getName();
 	
 	protected ArrayList<StoryStep>steps;
@@ -25,14 +26,25 @@ public abstract class Story {
 		return steps;
 	}
 	
-	public void changeStepStatus(String stepName, StepStatus status){
+	public void changeStepStatus(String key, StepStatus status){
 		Optional<StoryStep> step = steps.stream()
-				.filter(s -> s.Name.equalsIgnoreCase(stepName))
+				.filter(s -> s.Key.equalsIgnoreCase(key))
 				.findFirst();
-		
 		
 		//CJM -- for now I want this to throw if we don't find anything
 		step.get().Status = status;
+	}
+	
+	public void setComplete(String key){
+		changeStepStatus(key, StepStatus.Complete);
+	}
+	
+	public void setIrrelevant(String key){
+		changeStepStatus(key, StepStatus.Irrelevant);
+	}
+	
+	public void setCurrent(String key){
+		changeStepStatus(key, StepStatus.Current);
 	}
 	
 	public void resetSteps(){

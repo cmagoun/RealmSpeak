@@ -3,7 +3,7 @@ package com.cjm.magic_realm.components.storyline;
 import com.robin.magic_realm.components.attribute.TileLocation;
 import com.robin.magic_realm.components.wrapper.CharacterWrapper;
 
-public class StoryHelper {
+public class StoryRequirements {
 	
 	public static boolean isInDwelling(CharacterWrapper character, String dwellingName){
 		TileLocation loc = character.getCurrentLocation();

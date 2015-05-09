@@ -1,9 +1,10 @@
 package com.robin.magic_realm.RealmSpeak;
 
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.stream.Collectors;
@@ -12,6 +13,7 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultListModel;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
@@ -25,19 +27,47 @@ import com.cjm.magic_realm.components.storyline.StoryManager;
 import com.cjm.magic_realm.components.storyline.StoryStep;
 import com.cjm.magic_realm.components.storyline.StoryStep.StepStatus;
 
-
-
 public class CharacterStoryPanel extends CharacterFramePanel {
-
 	JList<String> storyList;
 	JPanel leftPanel;
 	JPanel rightPanel;
+	JPanel buttonPanel;
 	JPanel mainPanel;
+	JPanel descriptionPanel;
 	JLabel descriptionLabel;
+	JButton startButton;
+	JButton abandonButton;
+	int lastIndex;
 	
 	ListSelectionListener questSelected = new ListSelectionListener(){
 		public void valueChanged(ListSelectionEvent evt){
 			setDescriptionLabelText();
+		}
+	};
+	
+	ActionListener startPressed = new ActionListener(){
+		public void actionPerformed(ActionEvent evt){
+			int index = storyList.getSelectedIndex();
+			if(index == -1){return;}
+			
+			String storyName = storyList.getModel().getElementAt(index);
+			Story story = getStoryWithName(storyName);
+			story.start(getCharacter());
+			
+			lastIndex = index;
+			updatePanel();
+		}
+	};
+	
+	ActionListener abandonPressed = new ActionListener(){
+		public void actionPerformed(ActionEvent evt){
+			int index = storyList.getSelectedIndex();
+			if(index == -1){return;}
+			
+			String storyName = storyList.getModel().getElementAt(index);
+			StoryManager.getInstance().removeStory(getCharacter().getName(), storyName);
+			
+			updatePanel();
 		}
 	};
 
@@ -64,6 +94,7 @@ public class CharacterStoryPanel extends CharacterFramePanel {
 				+ "<h2>" + story.getName() + "</h2>"
 				+ "<p><b>Description: </b>" + story.getDescription() + "</p><br/>"
 				+ "<hr><br/>"
+				+ "<p><b>To Start: </b>" + story.getStartInstructions() + "</p></br></br>"
 				+ "<p><b>Quest Steps: </b>"
 				+ "<ul>"
 				+ getStepsHtml(story.getSteps())
@@ -89,30 +120,49 @@ public class CharacterStoryPanel extends CharacterFramePanel {
 		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.X_AXIS));
 		
 		leftPanel = new JPanel();
-		leftPanel.setPreferredSize(new Dimension(200,400));
 		leftPanel.setBackground(Color.WHITE);
-		leftPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+		leftPanel.setPreferredSize(new Dimension(200,400));
+		leftPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));	
 		
 		mainPanel.add(leftPanel);
 		mainPanel.add(Box.createHorizontalStrut(20));
 		
-
 		rightPanel = new JPanel();
+		rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
 		rightPanel.setPreferredSize(new Dimension(400,400));
-		rightPanel.setBackground(Color.WHITE);
 		rightPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		
+		descriptionPanel = new JPanel();
+		descriptionPanel.setBackground(Color.WHITE);
+		descriptionPanel.setPreferredSize(new Dimension(380,330));
+		rightPanel.add(descriptionPanel);
+		mainPanel.add(rightPanel);
+		
 		descriptionLabel = new JLabel();
-		descriptionLabel.setPreferredSize(new Dimension(380,380));
+		descriptionLabel.setPreferredSize(new Dimension(380,330));
 		descriptionLabel.setFont(new Font("arial", Font.PLAIN, 12));
 		descriptionLabel.setVerticalTextPosition(SwingConstants.TOP);
 		descriptionLabel.setVerticalAlignment(SwingConstants.TOP);
+		descriptionPanel.add(descriptionLabel);
 		
-		rightPanel.add(descriptionLabel);
+		buttonPanel = new JPanel();
+		buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
+		buttonPanel.setPreferredSize(new Dimension(400, 50));
+		rightPanel.add(buttonPanel);
 		
+		startButton = new JButton();
+		startButton.setPreferredSize(new Dimension(100,40));
+		startButton.setText("Start");
+		startButton.addActionListener(startPressed);
+		buttonPanel.add(startButton);
+		buttonPanel.add(Box.createHorizontalStrut(20));
 		
-		mainPanel.add(rightPanel);
-		
+		abandonButton = new JButton();
+		abandonButton.setPreferredSize(new Dimension(100,40));
+		abandonButton.setText("Abandon");
+		abandonButton.addActionListener(abandonPressed);
+		buttonPanel.add(abandonButton);
+			
 		add(mainPanel);
 		
 		createStoryListBox();
@@ -120,11 +170,12 @@ public class CharacterStoryPanel extends CharacterFramePanel {
 	}
 
 	private void updateControls() {	
-
+		//TODO: enable/disable buttons properly
 	}
 	
 	private void createStoryListBox(){
 		storyList = new JList<String>();
+		storyList.setBackground(Color.WHITE);
 		storyList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		storyList.setLayoutOrientation(JList.VERTICAL);
 		storyList.setVisibleRowCount(20);
@@ -145,6 +196,8 @@ public class CharacterStoryPanel extends CharacterFramePanel {
 			.forEach(s -> storyModel.addElement(s.getName()));
 		
 		storyList.setModel(storyModel);
+		
+		storyList.setSelectedIndex(lastIndex);
 		setDescriptionLabelText();
 	}
 

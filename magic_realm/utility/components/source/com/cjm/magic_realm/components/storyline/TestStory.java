@@ -9,6 +9,7 @@ public class TestStory extends Story {
 	private States state = States.One;
 	
 	public TestStory() {
+		//CJM: I think the way we are managing steps is a little clunky
 		steps.add(new StoryStep("Step One"));
 		steps.add(new StoryStep("Step Two"));
 		steps.add(new StoryStep("Step Three"));
@@ -21,19 +22,19 @@ public class TestStory extends Story {
 		case One:
 			if(eventKey == "two"){
 				state = States.Two;
-				changeStepStatus("step one", StepStatus.Complete);
-				changeStepStatus("step two", StepStatus.Current);
+				setComplete("step one");
+				setCurrent("step two");
 			}
 		case Two:
 			if(eventKey == "three"){
 				state = States.Three;
-				changeStepStatus("step two", StepStatus.Complete);
-				changeStepStatus("step three", StepStatus.Current);
+				setComplete("step two");
+				setCurrent("step three");
 			}
 		case Three:
 			if(eventKey == "done"){
 				state = States.Done;
-				changeStepStatus("step three", StepStatus.Complete);
+				setComplete("step three");
 			} else {
 				if(eventKey == "reset"){
 					state = States.One;
@@ -93,6 +94,12 @@ public class TestStory extends Story {
 	@Override
 	public String getName() {
 		return "Test Story";
+	}
+
+	@Override
+	public String getStartInstructions() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import com.robin.magic_realm.components.wrapper.CharacterWrapper;
 
+//Singleton
 public class StoryManager {
 	private static StoryManager instance = null;
 	private static HashMap<String, StoryList> stories; //characterName, StoryList
@@ -29,6 +30,17 @@ public class StoryManager {
 		StoryList list = getStoryList(characterName);
 		if(list == null){addCharacter(characterName);}
 		list.addStory(story);
+	}
+	
+	public void removeStory(String characterName, String storyName){
+		StoryList list = getStoryList(characterName);
+		if(list == null) {
+			addCharacter(characterName); 
+			return;
+		}
+		
+		//Story story = list.getStory(storyName);
+		list.removeStory(storyName);
 	}
 	
 	public Story getStory(String characterName, String key){

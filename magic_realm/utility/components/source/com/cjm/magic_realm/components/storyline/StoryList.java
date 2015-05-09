@@ -18,6 +18,10 @@ public class StoryList {
 		stories.put(story.getName(), story);
 	}
 	
+	public void removeStory(String storyName){
+		stories.remove(storyName);
+	}
+	
 	public ArrayList<Story>allStories(){
 		ArrayList<Story>result = new ArrayList<Story>();
 		stories.forEach((k,v) -> result.add(v));
