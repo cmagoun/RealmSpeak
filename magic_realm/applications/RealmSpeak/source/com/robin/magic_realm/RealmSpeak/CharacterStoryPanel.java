@@ -17,17 +17,19 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JSplitPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import com.cjm.magic_realm.components.storyline.IObserveStory;
 import com.cjm.magic_realm.components.storyline.Story;
 import com.cjm.magic_realm.components.storyline.StoryManager;
 import com.cjm.magic_realm.components.storyline.StoryStep;
 import com.cjm.magic_realm.components.storyline.StoryStep.StepStatus;
 
-public class CharacterStoryPanel extends CharacterFramePanel {
+public class CharacterStoryPanel extends CharacterFramePanel implements IObserveStory {
 	JList<String> storyList;
 	JPanel leftPanel;
 	JPanel rightPanel;
@@ -38,12 +40,11 @@ public class CharacterStoryPanel extends CharacterFramePanel {
 	JButton startButton;
 	JButton abandonButton;
 	int lastIndex;
-	CharacterStoryPanel thePanel;
 	
 	ListSelectionListener questSelected = new ListSelectionListener(){
 		public void valueChanged(ListSelectionEvent evt){
 			Story story = getSelectedStory();
-			if(story != null){story.setPanel(thePanel);}
+			//if(story != null){story.setPanel(thePanel);}
 			setDescriptionLabelText(story);
 		}
 	};
@@ -54,7 +55,6 @@ public class CharacterStoryPanel extends CharacterFramePanel {
 			if(story == null){return;}
 			
 			story.start(getCharacter());
-			story.setPanel(thePanel);
 			
 			lastIndex = storyList.getSelectedIndex();
 			updatePanel();
@@ -73,7 +73,7 @@ public class CharacterStoryPanel extends CharacterFramePanel {
 
 	protected CharacterStoryPanel(CharacterFrame parent) {
 		super(parent);
-		thePanel = this;
+		StoryManager.getInstance().registerObserver(getCharacter().getName(), this);
 		initComponents();
 	}
 	
@@ -122,29 +122,27 @@ public class CharacterStoryPanel extends CharacterFramePanel {
 	
 	private void initComponents() {	
 		mainPanel = new JPanel();
-		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.X_AXIS));
+		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.LINE_AXIS));
 		
 		leftPanel = new JPanel();
 		leftPanel.setBackground(Color.WHITE);
-		leftPanel.setPreferredSize(new Dimension(200,400));
-		leftPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));	
-		
+		leftPanel.setPreferredSize(new Dimension(150, 350));
+		leftPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));			
 		mainPanel.add(leftPanel);
-		mainPanel.add(Box.createHorizontalStrut(20));
-		
+
 		rightPanel = new JPanel();
 		rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
-		rightPanel.setPreferredSize(new Dimension(400,400));
+		rightPanel.setPreferredSize(new Dimension(300, 350));	
 		rightPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+		mainPanel.add(rightPanel);
 		
 		descriptionPanel = new JPanel();
 		descriptionPanel.setBackground(Color.WHITE);
-		descriptionPanel.setPreferredSize(new Dimension(380,330));
+		descriptionPanel.setPreferredSize(new Dimension(300,300));
 		rightPanel.add(descriptionPanel);
-		mainPanel.add(rightPanel);
-		
+
 		descriptionLabel = new JLabel();
-		descriptionLabel.setPreferredSize(new Dimension(380,330));
+		descriptionLabel.setPreferredSize(new Dimension(290,300));
 		descriptionLabel.setFont(new Font("arial", Font.PLAIN, 12));
 		descriptionLabel.setVerticalTextPosition(SwingConstants.TOP);
 		descriptionLabel.setVerticalAlignment(SwingConstants.TOP);
@@ -152,14 +150,15 @@ public class CharacterStoryPanel extends CharacterFramePanel {
 		
 		buttonPanel = new JPanel();
 		buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
-		buttonPanel.setPreferredSize(new Dimension(400, 50));
+		buttonPanel.setPreferredSize(new Dimension(300, 50));
 		rightPanel.add(buttonPanel);
-		
+	
 		startButton = new JButton();
 		startButton.setPreferredSize(new Dimension(100,40));
 		startButton.setText("Start");
 		startButton.addActionListener(startPressed);
 		buttonPanel.add(startButton);
+		
 		buttonPanel.add(Box.createHorizontalStrut(20));
 		
 		abandonButton = new JButton();
@@ -169,7 +168,7 @@ public class CharacterStoryPanel extends CharacterFramePanel {
 		buttonPanel.add(abandonButton);
 			
 		add(mainPanel);
-		
+
 		createStoryListBox();
 		updateControls();
 	}
@@ -214,5 +213,10 @@ public class CharacterStoryPanel extends CharacterFramePanel {
 	private Story getStoryWithName(String storyName){
 		StoryManager mgr = StoryManager.getInstance();
 		return mgr.getStory(getCharacter().getName(), storyName);
+	}
+
+	@Override
+	public void storyChanged() {
+		updatePanel();
 	}
 }

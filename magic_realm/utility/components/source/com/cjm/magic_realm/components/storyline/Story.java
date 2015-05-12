@@ -12,13 +12,12 @@ public abstract class Story {
 	public abstract boolean isStarted();
 	public abstract void start(CharacterWrapper character);
 	public abstract void end(CharacterWrapper character);
-	public abstract void handleStoryEvent(String eventKey, CharacterWrapper character, Object payload);
+	public abstract void handleStoryEvent(String eventKey, Object payload);
 	public abstract String getDescription();
 	public abstract String getStartInstructions();
 	public abstract String getName();
-
-	protected CharacterStoryPanel panel;
 	
+	protected CharacterWrapper character;
 	protected ArrayList<StoryStep>steps;
 	
 	protected Story(){
@@ -36,7 +35,9 @@ public abstract class Story {
 		
 		//CJM -- for now I want this to throw if we don't find anything
 		step.get().Status = status;
-		if(panel != null){panel.updatePanel();}
+		
+		//Tell story manager we have something to update in the UI
+		StoryManager.getInstance().updatedStoryFor(character.getName());
 	}
 	
 	public void setComplete(String key){
@@ -61,7 +62,7 @@ public abstract class Story {
 			.forEach(s ->changeStepStatus(s.Key, StepStatus.Complete));
 	}
 	
-	public void setPanel(CharacterStoryPanel p){
-		panel = p;
+	public void setCharacter(CharacterWrapper c){
+		character = c;
 	}
 }

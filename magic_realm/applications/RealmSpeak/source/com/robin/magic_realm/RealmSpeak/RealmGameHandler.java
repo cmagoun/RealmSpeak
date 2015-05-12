@@ -1648,8 +1648,7 @@ public class RealmGameHandler extends RealmSpeakInternalFrame {
 					
 					//CJM -- add bogus story to see if we can get it working with the game UI
 					StoryManager.getInstance().addCharacter(character.getName());
-					StoryManager.getInstance().addStory(character.getName(), new TestMoveStory());
-					//StoryManager.getInstance().addStory(character.getName(), new TestStory());
+					StoryManager.getInstance().addStory(character, new TestMoveStory());
 				}
 			}
 		}

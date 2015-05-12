@@ -23,7 +23,7 @@ public class TestMoveStory extends Story {
 	}
 	
 	@Override
-	public void handleStoryEvent(String eventKey, CharacterWrapper character, Object payload) {
+	public void handleStoryEvent(String eventKey, Object payload) {
 		switch(state){
 		
 		case ArrivedAtDestination:

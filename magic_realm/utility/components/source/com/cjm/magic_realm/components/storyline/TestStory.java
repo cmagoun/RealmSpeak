@@ -17,7 +17,7 @@ public class TestStory extends Story {
 	}
 
 	@Override
-	public void handleStoryEvent(String eventKey, CharacterWrapper forCharacter, Object payload) {
+	public void handleStoryEvent(String eventKey, Object payload) {
 		switch(state){
 		case One:
 			if(eventKey == "two"){

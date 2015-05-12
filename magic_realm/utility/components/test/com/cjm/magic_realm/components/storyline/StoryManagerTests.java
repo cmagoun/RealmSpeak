@@ -26,7 +26,8 @@ public class StoryManagerTests extends TestBaseWithLoader {
 	public void canAddStory(){
 		StoryManager manager = StoryManager.getInstance();
 		manager.addCharacter("Amazon");
-		manager.addStory("Amazon", new TestStory());
+		CharacterWrapper amazon = new CharacterWrapper(findGameObject("Amazon"));
+		manager.addStory(amazon, new TestStory());
 		
 		assertEquals(manager.getStory("Amazon", "Test Story").getDescription(), "This is a test");
 	}
@@ -35,8 +36,9 @@ public class StoryManagerTests extends TestBaseWithLoader {
 	public void canRemoveStory(){
 		StoryManager manager = StoryManager.getInstance();
 		manager.addCharacter("Amazon");
-		manager.addStory("Amazon", new TestStory());
-		manager.addStory("Amazon", new TestMoveStory());
+		CharacterWrapper amazon = new CharacterWrapper(findGameObject("Amazon"));
+		manager.addStory(amazon, new TestStory());
+		manager.addStory(amazon, new TestMoveStory());
 		assertEquals(2, manager.getStoryList("Amazon").count());
 	
 		manager.removeStory("Amazon", "Test Story");
@@ -46,9 +48,12 @@ public class StoryManagerTests extends TestBaseWithLoader {
 	@Test
 	public void whatHappensWhenWeAddTheSameStoryTwice(){
 		StoryManager manager = StoryManager.getInstance();
+		CharacterWrapper amazon = new CharacterWrapper(findGameObject("Amazon"));
+		
 		manager.addCharacter("Amazon");
-		manager.addStory("Amazon", new TestStory());
-		manager.addStory("Amazon", new TestStory());
+		
+		manager.addStory(amazon, new TestStory());
+		manager.addStory(amazon, new TestStory());
 		
 		assertEquals(manager.getStoryList("Amazon").count(), 1);
 	}
@@ -57,9 +62,9 @@ public class StoryManagerTests extends TestBaseWithLoader {
 	public void canSwitchStates(){
 		StoryManager manager = StoryManager.getInstance();
 		manager.addCharacter("Amazon");
-		manager.addStory("Amazon", new TestStory());
-		
 		CharacterWrapper amazon = new CharacterWrapper(findGameObject("Amazon"));
+		
+		manager.addStory(amazon, new TestStory());
 		manager.handleStoryEvent("two", amazon, null);
 		
 		TestStory result = (TestStory)manager.getStory("Amazon", "Test Story");
@@ -69,12 +74,15 @@ public class StoryManagerTests extends TestBaseWithLoader {
 	@Test
 	public void canSwitchStatesWhenTwoCharactersHaveStories(){
 		StoryManager manager = StoryManager.getInstance();
-		manager.addCharacter("Amazon");
-		manager.addCharacter("Black Knight");
-		manager.addStory("Amazon", new TestStory());
-		manager.addStory("Black Knight", new TestStory());
-		
 		CharacterWrapper amazon = new CharacterWrapper(findGameObject("Amazon"));
+		CharacterWrapper bk = new CharacterWrapper(findGameObject("Black Knight"));
+		
+		manager.addCharacter(amazon);
+		manager.addCharacter(bk);
+		
+		manager.addStory(amazon, new TestStory());
+		manager.addStory(bk, new TestStory());
+		
 		manager.handleStoryEvent("two", amazon, null);
 		
 		TestStory resultAmazon = (TestStory)manager.getStory("Amazon", "Test Story");
