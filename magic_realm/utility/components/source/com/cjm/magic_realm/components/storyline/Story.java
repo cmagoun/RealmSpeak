@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 import com.cjm.magic_realm.components.storyline.StoryStep.StepStatus;
-import com.robin.magic_realm.RealmSpeak.CharacterStoryPanel;
 import com.robin.magic_realm.components.wrapper.CharacterWrapper;
 
 public abstract class Story {

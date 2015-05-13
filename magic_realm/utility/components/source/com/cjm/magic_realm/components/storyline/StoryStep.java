@@ -18,4 +18,8 @@ public class StoryStep {
 		this.Key = name;
 		this.Status = StepStatus.Pending;
 	}
+	
+	public void changeDescription(String newDesc){
+		this.Name = newDesc;
+	}
 }

@@ -16,6 +16,7 @@ import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.ListSelectionModel;
@@ -28,6 +29,7 @@ import com.cjm.magic_realm.components.storyline.Story;
 import com.cjm.magic_realm.components.storyline.StoryManager;
 import com.cjm.magic_realm.components.storyline.StoryStep;
 import com.cjm.magic_realm.components.storyline.StoryStep.StepStatus;
+
 
 public class CharacterStoryPanel extends CharacterFramePanel implements IObserveStory {
 	JList<String> storyList;
@@ -58,6 +60,17 @@ public class CharacterStoryPanel extends CharacterFramePanel implements IObserve
 			
 			lastIndex = storyList.getSelectedIndex();
 			updatePanel();
+		}
+	};
+	
+	ActionListener cheatPressed = new ActionListener(){
+		public void actionPerformed(ActionEvent evt){
+			Story story = getSelectedStory();
+			if(story == null){return;}
+				
+			String cheat = JOptionPane.showInputDialog("Test");
+			String[] cheatValues = cheat.split(":");
+			story.handleStoryEvent(cheatValues[0], cheatValues[1]);
 		}
 	};
 	
@@ -152,25 +165,16 @@ public class CharacterStoryPanel extends CharacterFramePanel implements IObserve
 		buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
 		buttonPanel.setPreferredSize(new Dimension(300, 50));
 		rightPanel.add(buttonPanel);
-	
-		startButton = new JButton();
-		startButton.setPreferredSize(new Dimension(100,40));
-		startButton.setText("Start");
-		startButton.addActionListener(startPressed);
-		buttonPanel.add(startButton);
-		
-		buttonPanel.add(Box.createHorizontalStrut(20));
-		
-		abandonButton = new JButton();
-		abandonButton.setPreferredSize(new Dimension(100,40));
-		abandonButton.setText("Abandon");
-		abandonButton.addActionListener(abandonPressed);
-		buttonPanel.add(abandonButton);
 			
-		add(mainPanel);
+		createButton("Start", startPressed, true);
+		createButton("Abandon", abandonPressed, true);
+		createButton("Cheat", cheatPressed, false);
 
+		add(mainPanel);
+		
 		createStoryListBox();
 		updateControls();
+	
 	}
 
 	private void updateControls() {	
@@ -190,6 +194,16 @@ public class CharacterStoryPanel extends CharacterFramePanel implements IObserve
 		storyList.addListSelectionListener(questSelected);
 		
 		leftPanel.add(storyList);
+	}
+	
+	private void createButton(String text, ActionListener action, boolean addStrut){
+		JButton btn = new JButton();
+		btn.setPreferredSize(new Dimension(100, 40));
+		btn.setText(text);
+		btn.addActionListener(action);
+		buttonPanel.add(btn);
+		
+		if(addStrut) buttonPanel.add(Box.createHorizontalStrut(5));
 	}
 	
 	@Override

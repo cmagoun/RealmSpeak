@@ -752,7 +752,8 @@ public class RealmTurnPanel extends CharacterFramePanel {
 		}
 		
 		//CJM -- This is where I am hooking the story manager for phase events
-		StoryManager.getInstance().handleStoryEvent(DayAction.getDayAction(ar.getActionId()).getName(), getCharacter(), null); //not sure what to do with payload atm
+		dispatchStoryEvents(ar);
+
 		
 		getGameHandler().submitChanges(); // Will this work okay?
 		
@@ -863,6 +864,23 @@ public class RealmTurnPanel extends CharacterFramePanel {
 			return true;
 		}
 		return false;
+	}
+	
+	private void dispatchStoryEvents(ActionRow ar){
+		//CJM -- this method gives us a single place to slowly add story events we can handle
+		switch(ar.getActionId()){
+		case Move:
+			//move actions use character's current location and need no payload
+			StoryManager.getInstance().handleStoryEvent("move", getCharacter(), null);
+	
+		case Search:
+			//search actions use the search result 
+			StoryManager.getInstance().handleStoryEvent("search", getCharacter(), ar.getResult());
+			
+		default:
+			break;
+		
+		}
 	}
 	
 	private boolean SearchWasFruitful(String result) {
