@@ -1,4 +1,4 @@
-package com.robin.magic_realm.RealmSpeak;
+package com.cjm.magic_realm.components.storyline;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -13,8 +13,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
-
-import com.cjm.magic_realm.components.storyline.StoryOption;
 
 public class StoryOptionsFrame extends JFrame {
 

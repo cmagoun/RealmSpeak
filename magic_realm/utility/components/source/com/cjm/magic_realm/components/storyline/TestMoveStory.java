@@ -3,7 +3,7 @@ package com.cjm.magic_realm.components.storyline;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Optional;
-import com.robin.magic_realm.RealmSpeak.StoryOptionsFrame;
+
 import com.robin.magic_realm.components.wrapper.CharacterWrapper;
 
 public class TestMoveStory extends Story {

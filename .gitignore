@@ -245,3 +245,8 @@ magic_realm/applications/RealmQuestBuilder/ant_build/depcache/dependencies.txt
 
 magic_realm/utility/map/ant_build/depcache/dependencies.txt
 general/utility/general_graphics/ant_build/depcache/dependencies.txt
+*/ant_build/*
+game/applications/GameSetupEncoder/ant_build/
+game/utility/game_objects/ant_build/
+game/utility/game_server/ant_build/
+game/applications/GameBuilder/ant_build/
