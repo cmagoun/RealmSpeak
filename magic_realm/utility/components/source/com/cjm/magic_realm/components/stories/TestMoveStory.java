@@ -32,7 +32,7 @@ public class TestMoveStory extends Story {
 	
 	@Override
 	public void handleStoryEvent(String eventKey, Object payload) {
-		//CHEATS
+		//CHEATS -- change destination for ease of testing
 		if(eventKey.equalsIgnoreCase("dest")){	
 			Optional<StoryStep> step = steps.stream().filter(s -> s.Key.equals(GO_TO)).findFirst();
 					
@@ -49,32 +49,33 @@ public class TestMoveStory extends Story {
 		switch(state){
 		
 		case Started:
+			//have you gotten to your destination yet?
 			if(eventKey.equalsIgnoreCase("move")  && StoryRequirements.isInClearing(character, destination)){
 				state = States.ArrivedAtDestination;
-				setComplete(GO_TO);
-				setCurrent(FIND_WIDGET);
+				advanceStep();
 				
 				StoryManager.getInstance().addSearch(character, new CustomSearch("Find Widget", destination, character.getIcon(), new FindWidgetTable()));
 				
 				showArrived();		
-			} 
-			
+			} 	
 			break;
 		
 		case ArrivedAtDestination:
 			if(eventKey.equalsIgnoreCase("search")){
 				String searchResult = (String)payload;
 				
-				if(StoryRequirements.hasFound(searchResult, "You discovered the Widget")){
+				//have you found the widget yet?
+				if(StoryRequirements.hasFound(searchResult, FindWidgetTable.FOUND)){
 					state = States.FoundWidget;
-					setComplete(FIND_WIDGET);
-					setCurrent(RETURN_TO_INN);
+					character.addFame(1);
+					advanceStep();
 					StoryManager.getInstance().removeSearch(character, "Find Widget");
 				}
 			}
 			break;
 			
 		case FoundWidget:
+			//have you returned home yet?
 			if(eventKey.equalsIgnoreCase("move") && StoryRequirements.isInDwelling(character, "inn")){
 				state = States.ReturnedHome;
 				completeSteps();
@@ -98,7 +99,7 @@ public class TestMoveStory extends Story {
 	@Override
 	public void start(CharacterWrapper character) {
 		state = States.Started;
-		setCurrent(GO_TO);
+		advanceStep();
 		showIntro();
 	}
 
@@ -158,7 +159,7 @@ public class TestMoveStory extends Story {
 		StoryOptionsFrame frame = new StoryOptionsFrame();
 
 		frame.setTitle("Are We There Yet?");
-		frame.setText("You have arrived at " + destination + ", but alas there is nothing here. Return to the Inn to lament how boring this quest is. You gain 1 Fame for just being able to bear the tedium.");
+		frame.setText("You have arrived at " + destination + ", (+1 FAME) but you have yet to find the fabled Widget. SEARCH for the Widget and bring it back to the inn.");
 		
 		StoryOption ok = new StoryOption("OK", new ActionListener(){
 			@Override

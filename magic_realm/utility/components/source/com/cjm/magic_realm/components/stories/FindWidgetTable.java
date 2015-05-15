@@ -4,7 +4,8 @@ import com.robin.magic_realm.components.table.RealmTable;
 import com.robin.magic_realm.components.wrapper.CharacterWrapper;
 
 public class FindWidgetTable extends RealmTable {
-
+	public static final String FOUND = "You discovered the Widget (+1 Fame)";
+		
 	protected FindWidgetTable() {
 		super(null, null);
 		//CJM -- I don't think this will work
@@ -22,22 +23,22 @@ public class FindWidgetTable extends RealmTable {
 
 	@Override
 	public String applyOne(CharacterWrapper character) {
-		return "You discovered the Widget";
+		return FOUND;
 	}
 
 	@Override
 	public String applyTwo(CharacterWrapper character) {
-		return "You discovered the Widget";
+		return FOUND;
 	}
 
 	@Override
 	public String applyThree(CharacterWrapper character) {
-		return "You discovered the Widget";
+		return FOUND;
 	}
 
 	@Override
 	public String applyFour(CharacterWrapper character) {
-		return "You discovered the Widget";
+		return FOUND;
 	}
 
 	@Override

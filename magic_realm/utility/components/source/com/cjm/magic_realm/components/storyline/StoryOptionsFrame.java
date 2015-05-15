@@ -8,14 +8,15 @@ import java.util.ArrayList;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
+import com.robin.general.swing.AggressiveDialog;
+
 @SuppressWarnings("serial")
-public class StoryOptionsFrame extends JFrame {
+public class StoryOptionsFrame extends AggressiveDialog {
 
 	private final int width = 450;
 	private final int height = 400;
@@ -27,11 +28,15 @@ public class StoryOptionsFrame extends JFrame {
 	private ArrayList<StoryOption> options;
 	
 	public StoryOptionsFrame() {
+		super(StoryManager.getInstance().getFrame());
+		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+		this.setModal(true);
+		this.setAlwaysOnTop(true);
+		
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 		this.setSize(width,height);
 		setLocation(dim.width/2-width/2, dim.height/2-height/2);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
+
 		options = new ArrayList<StoryOption>();
 		
 		initializeControls();
@@ -90,7 +95,7 @@ public class StoryOptionsFrame extends JFrame {
 		options.stream()
 			.forEach(o -> {
 				JButton btn = new JButton();
-				btn.setPreferredSize(new Dimension(width-20, 40));
+				btn.setPreferredSize(new Dimension(width-40, 40));
 				btn.setText(o.Text);
 				btn.addActionListener(o.Action);
 				buttonPane.add(btn);

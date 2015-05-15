@@ -4,14 +4,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Optional;
 
+import javax.swing.JFrame;
+
 import com.robin.magic_realm.components.wrapper.CharacterWrapper;
 
 //Singleton
 public class StoryManager {
 	private static StoryManager instance = null;
-	private static HashMap<String, StoryList> stories; //characterName, StoryList
-	private static HashMap<String, ArrayList<IObserveStory>> observers; 
-	private static HashMap<String, ArrayList<CustomSearch>> customSearches;
+	private  HashMap<String, StoryList> stories; //characterName, StoryList
+	private  HashMap<String, ArrayList<IObserveStory>> observers; 
+	private  HashMap<String, ArrayList<CustomSearch>> customSearches;
+	private  JFrame mainFrame;
 	
 	protected StoryManager(){
 		stories = new HashMap<String, StoryList>();
@@ -25,6 +28,14 @@ public class StoryManager {
 		}
 		
 		return instance;
+	}
+	
+	public  void setFrame(JFrame frame){
+		mainFrame = frame;
+	}
+	
+	public JFrame getFrame(){
+		return mainFrame;
 	}
 	
 	public void addCharacter(String characterName){

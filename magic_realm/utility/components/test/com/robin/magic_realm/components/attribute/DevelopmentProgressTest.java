@@ -36,7 +36,7 @@ public class DevelopmentProgressTest {
 	@BeforeClass
 	public static void oneTimeSetUp() {
 		// one-time initialization code
-		RealmLoader loader = new RealmLoader();
+		RealmLoader loader = new RealmLoader("magic_realm/utility/components/resources/data/MagicRealmData.xml");
 		gameData = loader.getData();
 	}
 

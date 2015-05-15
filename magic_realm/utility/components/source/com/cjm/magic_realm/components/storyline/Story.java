@@ -27,6 +27,22 @@ public abstract class Story {
 		return steps;
 	}
 	
+	public void advanceStep(){
+		Optional<StoryStep> step = steps.stream()
+				.filter(s -> s.Status == StepStatus.Current)
+				.findFirst();
+		
+		if(!step.isPresent()) {
+			steps.get(0).Status = StepStatus.Current;
+		} else {
+			int index = steps.indexOf(step.get());
+			step.get().Status = StepStatus.Complete;
+			steps.get(index+1).Status = StepStatus.Current;
+		}
+		
+		StoryManager.getInstance().updatedStoryFor(character.getName());
+	}
+	
 	public void changeStepStatus(String key, StepStatus status){
 		Optional<StoryStep> step = steps.stream()
 				.filter(s -> s.Key.equalsIgnoreCase(key))

@@ -28,6 +28,7 @@ import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import javax.swing.filechooser.FileFilter;
 
+import com.cjm.magic_realm.components.storyline.StoryManager;
 import com.robin.game.objects.*;
 import com.robin.game.server.GameHost;
 import com.robin.game.server.GameServer;
@@ -2060,5 +2061,9 @@ public class RealmSpeakFrame extends JFrame {
 				JOptionPane.showMessageDialog(frame,"Game not found on launch:\n\n   "+gamePath,"Launch Error",JOptionPane.ERROR_MESSAGE);
 			}
 		}
+		
+		//CJM -- initialize storyManager
+		StoryManager storyManager = StoryManager.getInstance();
+		storyManager.setFrame(frame);
 	}
 }
