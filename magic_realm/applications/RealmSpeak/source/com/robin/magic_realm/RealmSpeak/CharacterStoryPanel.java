@@ -46,7 +46,6 @@ public class CharacterStoryPanel extends CharacterFramePanel implements IObserve
 	ListSelectionListener questSelected = new ListSelectionListener(){
 		public void valueChanged(ListSelectionEvent evt){
 			Story story = getSelectedStory();
-			//if(story != null){story.setPanel(thePanel);}
 			setDescriptionLabelText(story);
 		}
 	};
@@ -79,7 +78,7 @@ public class CharacterStoryPanel extends CharacterFramePanel implements IObserve
 			Story story = getSelectedStory();
 			if(story == null){return;}
 			
-			StoryManager.getInstance().removeStory(getCharacter().getName(), story.getName());	
+			StoryManager.getInstance().removeStory(getCharacter(), story.getName());	
 			updatePanel();
 		}
 	};

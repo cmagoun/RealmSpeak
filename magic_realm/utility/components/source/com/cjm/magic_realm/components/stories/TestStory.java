@@ -1,5 +1,7 @@
-package com.cjm.magic_realm.components.storyline;
+package com.cjm.magic_realm.components.stories;
 
+import com.cjm.magic_realm.components.storyline.Story;
+import com.cjm.magic_realm.components.storyline.StoryStep;
 import com.cjm.magic_realm.components.storyline.StoryStep.StepStatus;
 import com.robin.magic_realm.components.wrapper.CharacterWrapper;
 
@@ -13,7 +15,7 @@ public class TestStory extends Story {
 		steps.add(new StoryStep("Step One"));
 		steps.add(new StoryStep("Step Two"));
 		steps.add(new StoryStep("Step Three"));
-		changeStepStatus("step one", StepStatus.Current);
+
 	}
 
 	@Override
@@ -76,8 +78,7 @@ public class TestStory extends Story {
 
 	@Override
 	public void start(CharacterWrapper character) {
-		// TODO Auto-generated method stub
-		
+		changeStepStatus("step one", StepStatus.Current);
 	}
 
 	@Override

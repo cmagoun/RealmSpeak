@@ -18,9 +18,11 @@
 package com.robin.magic_realm.RealmSpeak;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import javax.swing.*;
 
+import com.cjm.magic_realm.components.storyline.StoryManager;
 import com.robin.game.objects.GameObject;
 import com.robin.general.swing.*;
 import com.robin.general.util.*;
@@ -1028,6 +1030,13 @@ public class ActionRow {
 				}
 			}
 		}
+		
+		//CJM -- Adding custom search objects here
+		StoryManager.getInstance().getSearches(character).stream()
+			.filter(cs -> cs.getClearing().equalsIgnoreCase(current.clearing.shortString()))
+			.forEach(cs -> {
+				addTableToChooser(chooseSearch, cs.getTable(gameHandler.getMainFrame(), gameHandler.getUpdateFrameListener()));
+			});
 		
 		chooseSearch.setLocationRelativeTo(gameHandler.getMainFrame());
 		chooseSearch.pack();

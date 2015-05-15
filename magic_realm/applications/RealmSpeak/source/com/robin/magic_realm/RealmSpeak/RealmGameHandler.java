@@ -28,10 +28,10 @@ import javax.swing.event.*;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 
+import com.cjm.magic_realm.components.stories.TestMoveStory;
+import com.cjm.magic_realm.components.stories.TestStory;
 import com.cjm.magic_realm.components.storyline.Story;
 import com.cjm.magic_realm.components.storyline.StoryManager;
-import com.cjm.magic_realm.components.storyline.TestMoveStory;
-import com.cjm.magic_realm.components.storyline.TestStory;
 import com.robin.game.objects.*;
 import com.robin.game.server.GameClient;
 import com.robin.game.server.GameHost;

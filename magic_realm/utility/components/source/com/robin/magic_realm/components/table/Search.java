@@ -23,6 +23,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.event.ChangeListener;
 
+import com.cjm.magic_realm.components.storyline.StoryManager;
 import com.robin.game.objects.GameObject;
 import com.robin.general.swing.ButtonOptionDialog;
 import com.robin.magic_realm.components.*;
@@ -43,9 +44,11 @@ public abstract class Search extends RealmTable {
 		super(frame,null);
 		targetClearing = clearing;
 	}
+	
 	protected ClearingDetail getCurrentClearing(CharacterWrapper character) {
 		return targetClearing==null?character.getCurrentLocation().clearing:targetClearing;
 	}
+	
 	protected String doChoice(CharacterWrapper character) {
 		String peer2String = "Clues and Paths";
 		String peer3String = "Hidden Enemies and Paths";
@@ -65,6 +68,9 @@ public abstract class Search extends RealmTable {
 		chooseSearch.setSelectionObjectIcon(locate2String,passages);
 		chooseSearch.addSelectionObject(locate4String);
 		chooseSearch.setSelectionObjectIcon(locate4String,chits);
+		
+		
+		
 		chooseSearch.setVisible(true);
 		String choice = (String)chooseSearch.getSelectedObject();
 		if (choice.equals(peer2String)) {
@@ -81,6 +87,7 @@ public abstract class Search extends RealmTable {
 		}
 		return null;
 	}
+	
 	protected void doClues(CharacterWrapper character) {
 		ClearingDetail currentClearing = getCurrentClearing(character);
 		String note = ClearingUtility.showTileChits(getParentFrame(),character,currentClearing,"Clues");
@@ -95,6 +102,7 @@ public abstract class Search extends RealmTable {
 		qp.searchHadAnEffect = note!=null;
 		character.testQuestRequirements(getParentFrame(),qp);
 	}
+	
 	protected ArrayList<ImageIcon> convertPathDetailToImageIcon(ArrayList<PathDetail> paths) {
 		ArrayList<ImageIcon> list = new ArrayList<ImageIcon>();
 		if (paths!=null) {
@@ -104,6 +112,7 @@ public abstract class Search extends RealmTable {
 		}
 		return list;
 	}
+	
 	protected ArrayList<ImageIcon> convertRealmComponentToImageIcon(ArrayList<RealmComponent> chits) {
 		ArrayList<ImageIcon> list = new ArrayList<ImageIcon>();
 		if (chits!=null) {
@@ -113,6 +122,7 @@ public abstract class Search extends RealmTable {
 		}
 		return list;
 	}
+	
 	protected ArrayList<PathDetail> getAllUndiscoveredPaths(CharacterWrapper character) {
 		ArrayList<PathDetail> list = new ArrayList<PathDetail>();
 		ClearingDetail currentClearing = getCurrentClearing(character);
@@ -128,6 +138,7 @@ public abstract class Search extends RealmTable {
 		}
 		return list;
 	}
+	
 	protected ArrayList<PathDetail> getAllUndiscoveredPassages(CharacterWrapper character) {
 		ArrayList<PathDetail> list = new ArrayList<PathDetail>();
 		ClearingDetail currentClearing = getCurrentClearing(character);
@@ -143,6 +154,7 @@ public abstract class Search extends RealmTable {
 		}
 		return list;
 	}
+	
 	protected ArrayList<RealmComponent> getAllDiscoverableChits(CharacterWrapper character,boolean onlyUndiscovered) {
 		ArrayList<RealmComponent> list = new ArrayList<RealmComponent>();
 		ClearingDetail currentClearing = getCurrentClearing(character);
@@ -171,6 +183,7 @@ public abstract class Search extends RealmTable {
 		}
 		return list;
 	}
+	
 	protected String doDiscoverChits(CharacterWrapper character) {
 		doClues(character);
 		QuestRequirementParams qp = new QuestRequirementParams();
@@ -203,6 +216,7 @@ public abstract class Search extends RealmTable {
 		character.testQuestRequirements(getParentFrame(),qp);
 		return message;
 	}
+	
 	public static boolean discoverChit(JFrame frame,CharacterWrapper character,ClearingDetail currentClearing,RealmComponent rc,QuestRequirementParams qp,ChangeListener listener) {
 		String discoveryName = rc.getGameObject().getName();
 		if (rc.getGameObject().hasThisAttribute("discovery")) {

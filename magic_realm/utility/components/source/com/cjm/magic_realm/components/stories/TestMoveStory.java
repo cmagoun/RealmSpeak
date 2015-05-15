@@ -1,29 +1,38 @@
-package com.cjm.magic_realm.components.storyline;
+package com.cjm.magic_realm.components.stories;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Optional;
 
+import com.cjm.magic_realm.components.storyline.CustomSearch;
+import com.cjm.magic_realm.components.storyline.Story;
+import com.cjm.magic_realm.components.storyline.StoryManager;
+import com.cjm.magic_realm.components.storyline.StoryOption;
+import com.cjm.magic_realm.components.storyline.StoryOptionsFrame;
+import com.cjm.magic_realm.components.storyline.StoryRequirements;
+import com.cjm.magic_realm.components.storyline.StoryStep;
 import com.robin.magic_realm.components.wrapper.CharacterWrapper;
 
 public class TestMoveStory extends Story {
 
 	private String GO_TO = "Move to ";
 	private String RETURN_TO_INN = "Return to Inn";
+	private String FIND_WIDGET = "Find the Widget";
 	private String destination = "ruins 3";
 	
-	public enum States{None, Started, ArrivedAtDestination, ReturnedHome};
+	public enum States{None, Started, ArrivedAtDestination, FoundWidget, ReturnedHome};
 	private States state = States.None;
 	
-
 	public TestMoveStory(){
 		steps.add(new StoryStep(GO_TO, GO_TO + destination));
+		steps.add(new StoryStep(FIND_WIDGET));
 		steps.add(new StoryStep(RETURN_TO_INN));
 		destination = "ruins 3";
 	}
 	
 	@Override
 	public void handleStoryEvent(String eventKey, Object payload) {
+		//CHEATS
 		if(eventKey.equalsIgnoreCase("dest")){	
 			Optional<StoryStep> step = steps.stream().filter(s -> s.Key.equals(GO_TO)).findFirst();
 					
@@ -34,27 +43,47 @@ public class TestMoveStory extends Story {
 			StoryManager.getInstance().updatedStoryFor(character.getName());
 			return;
 		}
+	
 		
+		//NON-CHEATS
 		switch(state){
 		
-		case ArrivedAtDestination:
-			if(eventKey.equalsIgnoreCase("move") && StoryRequirements.isInDwelling(character, "inn")){
-				state = States.ReturnedHome;
-				completeSteps();
-			}
-			
-		case ReturnedHome:
-			break;
-			
 		case Started:
 			if(eventKey.equalsIgnoreCase("move")  && StoryRequirements.isInClearing(character, destination)){
 				state = States.ArrivedAtDestination;
 				setComplete(GO_TO);
-				setCurrent(RETURN_TO_INN);
+				setCurrent(FIND_WIDGET);
 				
-				showArrived();
+				StoryManager.getInstance().addSearch(character, new CustomSearch("Find Widget", destination, character.getIcon(), new FindWidgetTable()));
 				
+				showArrived();		
+			} 
+			
+			break;
+		
+		case ArrivedAtDestination:
+			if(eventKey.equalsIgnoreCase("search")){
+				String searchResult = (String)payload;
+				
+				if(StoryRequirements.hasFound(searchResult, "You discovered the Widget")){
+					state = States.FoundWidget;
+					setComplete(FIND_WIDGET);
+					setCurrent(RETURN_TO_INN);
+					StoryManager.getInstance().removeSearch(character, "Find Widget");
+				}
 			}
+			break;
+			
+		case FoundWidget:
+			if(eventKey.equalsIgnoreCase("move") && StoryRequirements.isInDwelling(character, "inn")){
+				state = States.ReturnedHome;
+				completeSteps();
+			}
+			break;
+			
+		case ReturnedHome:
+			break;
+			
 		default:
 			break;
 		

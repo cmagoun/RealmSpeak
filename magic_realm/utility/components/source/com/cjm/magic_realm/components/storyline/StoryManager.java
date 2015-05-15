@@ -2,6 +2,7 @@ package com.cjm.magic_realm.components.storyline;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Optional;
 
 import com.robin.magic_realm.components.wrapper.CharacterWrapper;
 
@@ -10,10 +11,12 @@ public class StoryManager {
 	private static StoryManager instance = null;
 	private static HashMap<String, StoryList> stories; //characterName, StoryList
 	private static HashMap<String, ArrayList<IObserveStory>> observers; 
+	private static HashMap<String, ArrayList<CustomSearch>> customSearches;
 	
 	protected StoryManager(){
 		stories = new HashMap<String, StoryList>();
 		observers = new HashMap<String, ArrayList<IObserveStory>>();
+		customSearches = new HashMap<String, ArrayList<CustomSearch>>();
 	}
 	
 	public static StoryManager getInstance(){
@@ -27,12 +30,14 @@ public class StoryManager {
 	public void addCharacter(String characterName){
 		stories.put(characterName, new StoryList());
 		observers.put(characterName, new ArrayList<IObserveStory>());
+		customSearches.put(characterName, new ArrayList<CustomSearch>());
 	}
 	
 	public void addCharacter(CharacterWrapper character){
 		addCharacter(character.getName());
 	}
 	
+	//Story methods
 	public void addStory(CharacterWrapper character, Story story){
 		StoryList list = getStoryList(character.getName());
 		if(list == null){addCharacter(character.getName());}
@@ -72,14 +77,57 @@ public class StoryManager {
 		return getStoryList(character.getName());
 	}
 	
-	public void handleStoryEvent(String eventKey, CharacterWrapper forCharacter, Object payload){
-	 	getStoryList(forCharacter.getName())
-	 		.allStories()
-	 		.stream()
-	 		.forEach(s -> s.handleStoryEvent(eventKey, payload));
+	public void handleStoryEvent(StoryEvent evt){
+	 	getStoryList(evt.character.getName())
+ 		.allStories()
+ 		.stream()
+ 		.forEach(s -> s.handleStoryEvent(evt.key, evt.payload));
+	}
+
+	//Searches
+	public void addSearch(CharacterWrapper character, CustomSearch search){
+		ArrayList<CustomSearch> searches = customSearches.get(character.getName());
+		if(searches == null){
+			addCharacter(character);
+			searches = customSearches.get(character.getName());
+		}
+		
+		searches.add(search);
 	}
 	
+	public void removeSearch(CharacterWrapper character, CustomSearch search){
+		ArrayList<CustomSearch> searches = customSearches.get(character.getName());
+		if(searches == null){
+			addCharacter(character);
+			return;
+		}
+		
+		searches.remove(search);
+	}
+	
+	public void removeSearch(CharacterWrapper character, String desc) {
+		ArrayList<CustomSearch> searches = customSearches.get(character.getName());
+		Optional<CustomSearch> toRemove = searches.stream()
+				.filter(cs -> cs.getDescription().equalsIgnoreCase(desc))
+				.findFirst();
+		
+		if(toRemove.isPresent()){searches.remove(toRemove.get());}
+		
+	}
+	
+	public ArrayList<CustomSearch> getSearches(CharacterWrapper character){
+		ArrayList<CustomSearch> searches = customSearches.get(character.getName());
+		if(searches == null){
+			addCharacter(character);
+			return null;
+		}
+		
+		return searches;
+	}
+	
+	
 	//StoryManager acts as an event sink for the story panels
+	//Observers
 	public void updatedStoryFor(String characterName){
 		observers.get(characterName).stream()
 			.forEach(o -> o.storyChanged());
@@ -89,4 +137,6 @@ public class StoryManager {
 		ArrayList<IObserveStory>obs = observers.get(characterName);
 		obs.add(o);
 	}
+
+
 }

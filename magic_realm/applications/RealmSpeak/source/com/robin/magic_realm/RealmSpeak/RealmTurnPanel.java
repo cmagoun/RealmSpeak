@@ -27,6 +27,8 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 
+import com.cjm.magic_realm.components.storyline.MoveStoryEvent;
+import com.cjm.magic_realm.components.storyline.SearchStoryEvent;
 import com.cjm.magic_realm.components.storyline.StoryManager;
 import com.robin.game.objects.GameObject;
 import com.robin.general.swing.*;
@@ -871,11 +873,13 @@ public class RealmTurnPanel extends CharacterFramePanel {
 		switch(ar.getActionId()){
 		case Move:
 			//move actions use character's current location and need no payload
-			StoryManager.getInstance().handleStoryEvent("move", getCharacter(), null);
-	
+			StoryManager.getInstance().handleStoryEvent(new MoveStoryEvent(getCharacter()));
+			break;
+			
 		case Search:
 			//search actions use the search result 
-			StoryManager.getInstance().handleStoryEvent("search", getCharacter(), ar.getResult());
+			StoryManager.getInstance().handleStoryEvent(new SearchStoryEvent(getCharacter(), ar.getResult()));
+			break;
 			
 		default:
 			break;

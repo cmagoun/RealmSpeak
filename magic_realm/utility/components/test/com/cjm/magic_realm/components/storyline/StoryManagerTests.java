@@ -4,6 +4,8 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import com.cjm.magic_realm.components.stories.TestMoveStory;
+import com.cjm.magic_realm.components.stories.TestStory;
 import com.robin.magic_realm.components.TestBaseWithLoader;
 import com.robin.magic_realm.components.wrapper.CharacterWrapper;
 
@@ -65,7 +67,7 @@ public class StoryManagerTests extends TestBaseWithLoader {
 		CharacterWrapper amazon = new CharacterWrapper(findGameObject("Amazon"));
 		
 		manager.addStory(amazon, new TestStory());
-		manager.handleStoryEvent("two", amazon, null);
+		manager.handleStoryEvent(new StoryEvent("two", amazon, null));
 		
 		TestStory result = (TestStory)manager.getStory("Amazon", "Test Story");
 		assertEquals(result.report(), "two");
@@ -83,7 +85,7 @@ public class StoryManagerTests extends TestBaseWithLoader {
 		manager.addStory(amazon, new TestStory());
 		manager.addStory(bk, new TestStory());
 		
-		manager.handleStoryEvent("two", amazon, null);
+		manager.handleStoryEvent(new StoryEvent("two", amazon, null));
 		
 		TestStory resultAmazon = (TestStory)manager.getStory("Amazon", "Test Story");
 		TestStory resultBK = (TestStory)manager.getStory("Black Knight", "Test Story");

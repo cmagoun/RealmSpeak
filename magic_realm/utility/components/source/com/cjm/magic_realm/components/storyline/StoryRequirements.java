@@ -26,6 +26,10 @@ public class StoryRequirements {
 		TileLocation loc = character.getCurrentLocation();
 		return loc.tile.getName().equalsIgnoreCase(tileName);
 	}
+
+	public static boolean hasFound(String searchResult, String needed) {
+		return searchResult.toLowerCase().endsWith(needed.toLowerCase());
+	}
 	
 	
 	

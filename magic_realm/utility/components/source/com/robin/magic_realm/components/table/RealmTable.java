@@ -60,6 +60,16 @@ public abstract class RealmTable {
 		}
 		return null;
 	}
+	
+	//CJM -- We may not know these at the time of instantiation
+	public void setFrame(JFrame frame){
+		parentFrame = frame;
+	}
+	
+	public void setListener(ChangeListener listener){
+		this.listener = listener;
+	}
+	
 	public ImageIcon getHintIcon(CharacterWrapper character) {
 		return getIconFromList(getHintIcons(character));
 	}
