@@ -150,6 +150,7 @@ public class TestMoveStory extends Story {
 
 		frame.setTitle("This is a Test!");
 		frame.setText("You are sitting quietly in the Inn when suddenly, someone comes to you and tells you to get your butt to " + destination + ". Like NOW!!!");
+		frame.setImage("images/monsters/imp.gif");
 		
 		StoryOption ok = new StoryOption("OK", new ActionListener(){
 			@Override
@@ -195,6 +196,7 @@ public class TestMoveStory extends Story {
 
 		frame.setTitle("Guaridan Appears");
 		frame.setText("As you pick up the Widget and start to leave the clearing, a fell beast appears!");
+		frame.setImage("images/monsters/imp.gif");
 		
 		StoryOption ok = new StoryOption("OK", new ActionListener(){
 			@Override

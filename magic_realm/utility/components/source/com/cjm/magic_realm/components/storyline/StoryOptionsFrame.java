@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -68,6 +69,11 @@ public class StoryOptionsFrame extends AggressiveDialog {
 	
 	public void setTitle(String title){
 		super.setTitle(title);
+	}
+	
+	public void setImage(String path){
+		ImageIcon img = new ImageIcon(path);
+		textLabel.setIcon(img);
 	}
 	
 	public void setText(String text){
