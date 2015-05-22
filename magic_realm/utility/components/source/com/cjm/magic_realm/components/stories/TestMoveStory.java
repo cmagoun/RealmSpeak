@@ -11,6 +11,9 @@ import com.cjm.magic_realm.components.storyline.StoryOption;
 import com.cjm.magic_realm.components.storyline.StoryOptionsFrame;
 import com.cjm.magic_realm.components.storyline.StoryRequirements;
 import com.cjm.magic_realm.components.storyline.StoryStep;
+import com.robin.game.objects.GameData;
+import com.robin.game.objects.GameObject;
+import com.robin.magic_realm.components.utility.MonsterCreator;
 import com.robin.magic_realm.components.wrapper.CharacterWrapper;
 
 public class TestMoveStory extends Story {
@@ -18,14 +21,16 @@ public class TestMoveStory extends Story {
 	private String GO_TO = "Move to ";
 	private String RETURN_TO_INN = "Return to Inn";
 	private String FIND_WIDGET = "Find the Widget";
+	private String KILL_GUARD = "Kill the Guardian";
 	private String destination = "ruins 3";
 	
-	public enum States{None, Started, ArrivedAtDestination, FoundWidget, ReturnedHome};
+	public enum States{None, Started, ArrivedAtDestination, FoundWidget, Guardian, ReturnedHome};
 	private States state = States.None;
 	
 	public TestMoveStory(){
 		steps.add(new StoryStep(GO_TO, GO_TO + destination));
 		steps.add(new StoryStep(FIND_WIDGET));
+		steps.add(new StoryStep(KILL_GUARD));
 		steps.add(new StoryStep(RETURN_TO_INN));
 		destination = "ruins 3";
 	}
@@ -44,7 +49,6 @@ public class TestMoveStory extends Story {
 			return;
 		}
 	
-		
 		//NON-CHEATS
 		switch(state){
 		
@@ -66,10 +70,23 @@ public class TestMoveStory extends Story {
 				
 				//have you found the widget yet?
 				if(StoryRequirements.hasFound(searchResult, FindWidgetTable.FOUND)){
-					state = States.FoundWidget;
+					state = States.Guardian;
 					character.addFame(1);
+					showGuardian();
+					//createGuardianEncounter();
 					advanceStep();
 					StoryManager.getInstance().removeSearch(character, "Find Widget");
+				}
+			}
+			break;
+			
+		case Guardian:
+			if(eventKey.equalsIgnoreCase("kill")){
+				GameObject killed = (GameObject)payload;
+				
+				if(StoryRequirements.hasKilledName(killed, "widget guard")){
+					state = States.FoundWidget;
+					advanceStep();
 				}
 			}
 			break;
@@ -173,4 +190,34 @@ public class TestMoveStory extends Story {
 		frame.setVisible(true);	
 	}
 
+	private void showGuardian(){
+		StoryOptionsFrame frame = new StoryOptionsFrame();
+
+		frame.setTitle("Guaridan Appears");
+		frame.setText("As you pick up the Widget and start to leave the clearing, a fell beast appears!");
+		
+		StoryOption ok = new StoryOption("OK", new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent evt) {
+				frame.setVisible(false);
+				createGuardianEncounter();
+			}
+		});
+		
+		frame.addOptions(ok);
+		frame.setVisible(true);	
+	}
+	
+	private void createGuardianEncounter(){
+		GameData data = character.getGameObject().getGameData();
+		MonsterCreator creator = new MonsterCreator("widget_guardian");
+		GameObject summon = creator.createOrReuseMonster(data);
+		
+		creator.setupGameObject(summon, "Widget Guard", "imp", "monsters", "L", false, false);
+		creator.setupSide(summon, "light", null, 0, 0, 0, 6, "lightgreen");
+		creator.setupSide(summon, "dark", null, 0, 0, 0, 6, "forestgreen");
+		
+		character.getCurrentLocation().clearing.add(summon,null);
+		character.setHidden(false);
+	}
 }

@@ -63,16 +63,23 @@ public class MonsterCreator {
 		go.setAttribute(side,"move_speed",moveSpeed);
 		go.setAttribute(side,"chit_color",color);
 	}
+	
+	//CJM -- do these two overloads really need to exist?
 	public void setupGameObject(GameObject go,String name,String iconType,String vulnerability,boolean armored) {
-		setupGameObject(go,name,iconType,vulnerability,armored,false);
+		setupGameObject(go,name,iconType,"monsters2",vulnerability,armored,false);
 	}
-	public void setupGameObject(GameObject go,String name,String iconType,String vulnerability,boolean armored,boolean flies) {
+	
+	public void setupGameObject(GameObject go,String name,String iconType,String vulnerability,boolean armored, boolean flies) {
+		setupGameObject(go,name,iconType,"monsters2",vulnerability,armored,flies);
+	}
+
+	public void setupGameObject(GameObject go,String name,String iconType, String iconFolder, String vulnerability, boolean armored, boolean flies) {
 		go.setName(name);
 		go.setThisAttribute("monster");
 		go.setThisAttribute(monsterKey);
 		go.setThisAttribute("vulnerability",vulnerability);
 		go.setThisAttribute("icon_type",iconType);
-		go.setThisAttribute("icon_folder","monsters2");
+		go.setThisAttribute("icon_folder",iconFolder);
 		go.removeThisAttribute(Constants.ARMORED);
 		go.removeThisAttribute("flying");
 		if (armored) {
