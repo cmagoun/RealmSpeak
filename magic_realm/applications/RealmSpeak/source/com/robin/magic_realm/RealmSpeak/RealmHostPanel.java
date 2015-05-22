@@ -23,6 +23,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.*;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import javax.swing.*;
 import javax.swing.event.*;
@@ -44,6 +45,7 @@ import com.robin.magic_realm.components.attribute.TileLocation;
 import com.robin.magic_realm.components.swing.RealmLogWindow;
 import com.robin.magic_realm.components.utility.*;
 import com.robin.magic_realm.components.wrapper.*;
+import com.cjm.magic_realm.components.storyline.*;
 
 public class RealmHostPanel extends JPanel {
 
@@ -833,6 +835,19 @@ public class RealmHostPanel extends JPanel {
 					throw new IllegalStateException("For some reason, " + go.getName() + " is owned by " + owner.getGameObject().getName() + ", which is not a character!!!");
 				}
 			}
+		}
+			
+		//CJM -- can I check character story kills here?
+		DayKey dayKey = new DayKey(game.getMonth(), game.getDay());
+		ArrayList<CharacterWrapper>characters = 
+				getLivingCharacters().stream()
+					.map(go -> new CharacterWrapper(go))
+					.collect(Collectors.toCollection(ArrayList::new));
+		
+		for(CharacterWrapper c : characters){
+			c.getKills(dayKey.toString()).stream()
+				.map(k -> new KillStoryEvent(c, k))
+				.forEach(e -> StoryManager.getInstance().handleStoryEvent(e));
 		}
 
 		// Finally, add day(s)
